@@ -1,6 +1,6 @@
 ﻿using Spectre.Console;
 
-namespace ShiftsLogger.Menus;
+namespace ShiftsLoggerUI.Menus;
 
 internal class MainMenu : BaseMenu
 {

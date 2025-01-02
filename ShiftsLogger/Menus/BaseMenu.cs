@@ -1,4 +1,4 @@
-﻿namespace ShiftsLogger.Menus;
+﻿namespace ShiftsLoggerUI.Menus;
 
 internal abstract class BaseMenu
 {

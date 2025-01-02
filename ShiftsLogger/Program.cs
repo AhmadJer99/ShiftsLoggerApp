@@ -1,4 +1,4 @@
-﻿using ShiftsLogger.Menus;
+﻿using ShiftsLoggerUI.Menus;
 
 MainMenu mainMenu = new();
 
