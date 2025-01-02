@@ -3,7 +3,7 @@
 public class Shift
 {
     public int ShiftId { get; set; }
-    //public Employee? Employee { get; set; }
+    public Employee? Employee { get; set; }
     public string? EmployeeName { get; set; }
     public DateTime StartDateTime { get; set; }
     public DateTime EndDateTime { get; set; }
