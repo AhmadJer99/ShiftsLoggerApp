@@ -53,4 +53,15 @@ public class EmployeeRepository : IEmployeeRepository
 
         return emp;
     }
+
+    public async Task<Employee> FindEmployeeAsync(int id)
+    {
+        var emp = await _context.Employees.AsNoTracking().FirstOrDefaultAsync(e => e.EmpId == id);
+
+        if (emp == null)
+        {
+            return null;
+        }
+        return emp;
+    }
 }
