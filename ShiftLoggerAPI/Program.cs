@@ -14,6 +14,7 @@ builder.Services.AddDbContext<ShitftsLoggerDbContext>(opt =>
     opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<IShiftRepository, ShiftRepository>();
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+builder.Services.AddScoped<ISeedRepository, SeedRepository>();
 builder.Services.AddTransient<DbInitialiser>();
 
 var app = builder.Build();
