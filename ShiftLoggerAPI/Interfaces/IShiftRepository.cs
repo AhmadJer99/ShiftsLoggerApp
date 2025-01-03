@@ -1,5 +1,4 @@
-﻿
-using ShiftsLoggerAPI.Models;
+﻿using ShiftsLoggerAPI.Models;
 
 namespace ShiftsLoggerAPI.Interfaces;
 

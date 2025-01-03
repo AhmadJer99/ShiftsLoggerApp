@@ -2,9 +2,9 @@
 
 public class Shift
 {
-    public int ShiftId { get; set; }
+    public int ShiftId { get; set; } // Primary Key
     public Employee? Employee { get; set; }
-    public string? EmployeeName { get; set; }
+    public int EmpId { get; set; } // Foreign Key
     public DateTime StartDateTime { get; set; }
     public DateTime EndDateTime { get; set; }
 

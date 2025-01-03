@@ -16,18 +16,15 @@ public class ShitftsLoggerDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Employee>()
-            .HasKey(pc => pc.EmpId);
+            .HasKey(emp => emp.EmpId);
 
         modelBuilder.Entity<Employee>()
-            .HasIndex(pc => pc.EmpName)
+            .HasIndex(emp => emp.EmpName)
             .IsUnique();
 
-        //modelBuilder.Entity<Employee>()
-        //    .HasMany(pc => pc.EmpShifts);
-
-        //modelBuilder.Entity<Shift>()
-        //    .HasOne(pc => pc.Employee);
-
-        
+        modelBuilder.Entity<Shift>()
+            .HasOne(shift => shift.Employee)
+            .WithMany(emp => emp.EmpShifts)
+            .HasForeignKey(shift => shift.EmpId);
     }
 }

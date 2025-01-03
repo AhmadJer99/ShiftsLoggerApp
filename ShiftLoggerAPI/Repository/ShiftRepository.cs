@@ -13,16 +13,15 @@ internal class ShiftRepository : IShiftRepository
     {
         _context = context;
     }
+    public async Task<Shift> CreateShiftAsync(Shift shift)
+    {
+        var newShift = await _context.Shifts.AddAsync(shift);
+        _context.SaveChanges();
+        return newShift.Entity;
+    }
 
     public async Task<ICollection<Shift>> GetShiftsAsync()
     {
         return await _context.Shifts.AsNoTracking().ToListAsync();
-    }
-
-    public async Task<Shift> CreateShiftAsync(Shift shift)
-    {
-        var createdShift = await _context.Shifts.AddAsync(shift);
-        _context.SaveChanges();
-        return createdShift.Entity;
     }
 }

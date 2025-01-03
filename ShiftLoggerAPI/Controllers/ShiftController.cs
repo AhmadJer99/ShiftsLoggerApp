@@ -20,12 +20,11 @@ public class ShiftController : ControllerBase
     public async Task<ActionResult<ICollection<Shift>>> GetShiftsAsync()
     {
         var shifts = await _shiftRepository.GetShiftsAsync();
+
         if (shifts == null)
             return NotFound();
-
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
-
         return Ok(shifts);
     }
 }

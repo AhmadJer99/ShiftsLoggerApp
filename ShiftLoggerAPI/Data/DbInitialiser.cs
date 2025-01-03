@@ -17,10 +17,10 @@ public class DbInitialiser
 
     public async Task RunAsync()
     {
-        _context.Database.EnsureDeleted();
-        _context.Database.EnsureCreated();
+        await _context.Database.EnsureDeletedAsync();
+        await _context.Database.EnsureCreatedAsync();
 
-        await SeedDbAsync();
+        //await SeedDbAsync();
     }
 
     private async Task SeedDbAsync(int randomShifts = 100)
@@ -42,7 +42,7 @@ public class DbInitialiser
 
             var randShift = new Shift
             {
-                EmployeeName = empNames[randIndex],
+                //EmployeeName = empNames[randIndex],
                 StartDateTime = randStartTime,
                 EndDateTime = randEndTime
             };
