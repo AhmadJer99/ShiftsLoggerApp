@@ -25,4 +25,32 @@ public class EmployeeRepository : IEmployeeRepository
     {
         return await _context.Employees.AsNoTracking().ToListAsync();
     }
+
+    public async Task<string> DeleteEmployeeAsync(int id)
+    {
+        var emp = await _context.Employees.AsNoTracking().FirstOrDefaultAsync(e => e.EmpId == id);
+
+        if (emp == null)
+            return null;
+
+        _context.Employees.Remove(emp);
+        await _context.SaveChangesAsync();
+
+        return $"Employee With id={emp.EmpId} deleted successfully!"; 
+    }
+
+    public async Task<Employee> UpdateEmployeeAsync(int id, Employee updatedEmployee)
+    {
+        var emp = await _context.Employees.FirstOrDefaultAsync(e => e.EmpId == id);
+
+        if (emp == null)
+        {
+            return null;
+        }
+
+        _context.Entry(emp).CurrentValues.SetValues(updatedEmployee);
+        _context.SaveChanges();
+
+        return emp;
+    }
 }

@@ -32,6 +32,20 @@ public class EmployeeController : ControllerBase
     [ProducesResponseType(200, Type = typeof(Employee))]
     public async Task<ActionResult<Employee>> CreateEmployeeAsync(Employee employee)
     {
-        return Ok(await _employeeRepository.CreateEmployeeAsync(employee)); 
+        return Ok(await _employeeRepository.CreateEmployeeAsync(employee));
+    }
+
+    [HttpDelete("{id:int}")]
+    [ProducesResponseType(200, Type = typeof(string))]
+    public async Task<ActionResult<string>> DeleteEmployeeAsync(int id)
+    {
+        return Ok(await _employeeRepository.DeleteEmployeeAsync(id));
+    }
+
+    [HttpPut("{id:int}")]
+    [ProducesResponseType(200, Type = typeof(Employee))]
+    public async Task<ActionResult<Employee>> UpdateEmployeeAsync(int id, Employee updatedEmployee)
+    {
+        return Ok(await _employeeRepository.UpdateEmployeeAsync(id, updatedEmployee));
     }
 }
