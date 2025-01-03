@@ -27,4 +27,11 @@ public class EmployeeController : ControllerBase
             return BadRequest(ModelState);
         return Ok(emps);
     }
+
+    [HttpPost]
+    [ProducesResponseType(200, Type = typeof(Employee))]
+    public async Task<ActionResult<Employee>> CreateEmployeeAsync(Employee employee)
+    {
+        return Ok(await _employeeRepository.CreateEmployeeAsync(employee)); 
+    }
 }

@@ -24,7 +24,7 @@ public class SeedRepository : ISeedRepository
         var empNames = new List<string> { "Ahmad", "Basil", "Chris", "Osama", "Hera" }; // ranmdom employee profiles
         var empPhones = new List<string> { "0787964386", "0788038785", "078929385", "07869347814", "0789781294" };
 
-        for (int i = 0;i < empNames.Count;i++)
+        for (int i = 0; i < empNames.Count; i++)
         {
             var empName = empNames[i];
             var randPhone = empPhones[_random.Next(0, empPhones.Count)];
@@ -43,7 +43,7 @@ public class SeedRepository : ISeedRepository
     public async Task SeedShiftsAsync(int randRowNumber)
     {
         var employees = await _context.Employees.AsNoTracking().ToListAsync();
- 
+
         for (int i = 0; i < randRowNumber; i++)
         {
             var empIndex = _random.Next(0, employees.Count);
@@ -95,5 +95,5 @@ public class SeedRepository : ISeedRepository
         return DateTime.Today.AddDays(randOffset); // random dates within the last month.
     }
 
-    
+
 }

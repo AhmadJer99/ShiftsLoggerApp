@@ -9,7 +9,7 @@ public class Shift
     public DateTime EndDateTime { get; set; }
 
     private int? _manualDuration;
-    public int ShiftDurationHours   
+    public int ShiftDurationHours
     {
         get
         {

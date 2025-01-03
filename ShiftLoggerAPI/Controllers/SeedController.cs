@@ -14,7 +14,7 @@ public class SeedController : ControllerBase
         _seedRepository = seedRepository;
     }
 
-    [HttpPut]
+    [HttpPost]
     [ProducesResponseType(200, Type = typeof(string))]
     public async Task<ActionResult> SeedEmployeesAsync()
     {
@@ -23,7 +23,7 @@ public class SeedController : ControllerBase
         return Ok("Seeded Successfully!");
     }
 
-    [HttpPut("{randRowNumber:int}")]
+    [HttpPost("{randRowNumber:int}")]
     [ProducesResponseType(200, Type = typeof(string))]
     public async Task<ActionResult> SeedShiftsAsync(int randRowNumber)
     {
