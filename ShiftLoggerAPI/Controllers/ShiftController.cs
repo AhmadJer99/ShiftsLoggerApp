@@ -27,4 +27,27 @@ public class ShiftController : ControllerBase
             return BadRequest(ModelState);
         return Ok(shifts);
     }
+
+    [HttpGet("{id:int}")]
+    [ProducesResponseType(200, Type = typeof(Shift))]
+    public async Task<ActionResult<Shift>> FindShiftAsync(int id)
+    {
+        var shift = await _shiftRepository.FindShiftAsync(id);
+
+        if (shift == null)
+            return NotFound();
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+        return Ok(shift);
+    }
+
+    [HttpPost]
+    [ProducesResponseType(200, Type = typeof(Shift))]
+    public async Task<ActionResult<Shift>> CreateShiftAsync(Shift shift)
+    {
+        var newShift = await _shiftRepository.CreateShiftAsync(shift);
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+        return Ok(newShift);
+    }
 }

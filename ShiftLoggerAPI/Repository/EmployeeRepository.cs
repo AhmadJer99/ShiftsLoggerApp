@@ -36,7 +36,7 @@ public class EmployeeRepository : IEmployeeRepository
         _context.Employees.Remove(emp);
         await _context.SaveChangesAsync();
 
-        return $"Employee With id={emp.EmpId} deleted successfully!"; 
+        return $"Employee With id={emp.EmpId} deleted successfully!";
     }
 
     public async Task<Employee> UpdateEmployeeAsync(int id, Employee updatedEmployee)
@@ -44,9 +44,7 @@ public class EmployeeRepository : IEmployeeRepository
         var emp = await _context.Employees.FirstOrDefaultAsync(e => e.EmpId == id);
 
         if (emp == null)
-        {
             return null;
-        }
 
         _context.Entry(emp).CurrentValues.SetValues(updatedEmployee);
         _context.SaveChanges();
@@ -59,9 +57,8 @@ public class EmployeeRepository : IEmployeeRepository
         var emp = await _context.Employees.AsNoTracking().FirstOrDefaultAsync(e => e.EmpId == id);
 
         if (emp == null)
-        {
             return null;
-        }
+
         return emp;
     }
 }

@@ -20,6 +20,16 @@ internal class ShiftRepository : IShiftRepository
         return newShift.Entity;
     }
 
+    public async Task<Shift> FindShiftAsync(int id)
+    {
+        var shift = await _context.Shifts.AsNoTracking().FirstOrDefaultAsync(s => s.ShiftId == id);
+
+        if (shift == null)
+            return null;
+
+        return shift;
+    }
+
     public async Task<ICollection<Shift>> GetShiftsAsync()
     {
         return await _context.Shifts.AsNoTracking().ToListAsync();

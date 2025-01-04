@@ -27,6 +27,7 @@ public class EmployeeController : ControllerBase
             return BadRequest(ModelState);
         return Ok(emps);
     }
+
     [HttpGet("{id:int}")]
     [ProducesResponseType(200, Type = typeof(Employee))]
     public async Task<ActionResult<ICollection<Employee>>> FindEmployeeAsync(int id)

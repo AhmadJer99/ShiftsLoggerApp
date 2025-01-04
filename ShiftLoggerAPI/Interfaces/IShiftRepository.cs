@@ -6,4 +6,5 @@ public interface IShiftRepository
 {
     Task<ICollection<Shift>> GetShiftsAsync();
     Task<Shift> CreateShiftAsync(Shift shift);
+    Task<Shift> FindShiftAsync(int id);
 }
