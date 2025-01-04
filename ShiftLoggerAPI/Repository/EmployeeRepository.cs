@@ -36,7 +36,7 @@ public class EmployeeRepository : IEmployeeRepository
         _context.Employees.Remove(emp);
         await _context.SaveChangesAsync();
 
-        return $"Employee With id={emp.EmpId} deleted successfully!";
+        return $"Successfully deleted employee {emp.EmpName} with id: {id}";
     }
 
     public async Task<Employee> UpdateEmployeeAsync(int id, Employee updatedEmployee)
