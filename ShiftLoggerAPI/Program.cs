@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using ShiftsLoggerAPI.Data;
+using ShiftsLoggerAPI.Helper;
 using ShiftsLoggerAPI.Interfaces;
 using ShiftsLoggerAPI.Repository;
 
@@ -16,6 +17,7 @@ builder.Services.AddScoped<IShiftRepository, ShiftRepository>();
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 builder.Services.AddScoped<ISeedRepository, SeedRepository>();
 builder.Services.AddTransient<DbInitialiser>();
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 var app = builder.Build();
 

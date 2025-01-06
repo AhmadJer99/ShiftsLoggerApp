@@ -28,7 +28,7 @@ public class EmployeeRepository : IEmployeeRepository
 
     public async Task<string> DeleteEmployeeAsync(int id)
     {
-        var emp = await _context.Employees.AsNoTracking().FirstOrDefaultAsync(e => e.EmpId == id);
+        var emp = await _context.Employees.AsNoTracking().Where(e => e.EmpId == id).FirstOrDefaultAsync();
 
         if (emp == null)
             return null;
@@ -41,7 +41,7 @@ public class EmployeeRepository : IEmployeeRepository
 
     public async Task<Employee> UpdateEmployeeAsync(int id, Employee updatedEmployee)
     {
-        var emp = await _context.Employees.FirstOrDefaultAsync(e => e.EmpId == id);
+        var emp = await _context.Employees.AsNoTracking().Where(e => e.EmpId == id).FirstOrDefaultAsync();
 
         if (emp == null)
             return null;
@@ -54,7 +54,7 @@ public class EmployeeRepository : IEmployeeRepository
 
     public async Task<Employee> FindEmployeeAsync(int id)
     {
-        var emp = await _context.Employees.AsNoTracking().FirstOrDefaultAsync(e => e.EmpId == id);
+        var emp = await _context.Employees.AsNoTracking().Where(e => e.EmpId == id).FirstOrDefaultAsync();
 
         if (emp == null)
             return null;

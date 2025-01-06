@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using ShiftsLoggerAPI.Dto;
 using ShiftsLoggerAPI.Interfaces;
 using ShiftsLoggerAPI.Models;
-using ShiftsLoggerAPI.Repository;
 
 namespace ShiftsLoggerAPI.Controllers;
 
@@ -10,17 +11,20 @@ namespace ShiftsLoggerAPI.Controllers;
 public class ShiftController : ControllerBase
 {
     private readonly IShiftRepository? _shiftRepository;
+    private readonly IMapper _mapper;
 
-    public ShiftController(IShiftRepository shiftRepository)
+    public ShiftController(IShiftRepository shiftRepository, IMapper mapper)
     {
         _shiftRepository = shiftRepository;
+        _mapper = mapper;
     }
 
     [HttpGet]
     [ProducesResponseType(200, Type = typeof(ICollection<Shift>))]
+    [ProducesResponseType(400)]
     public async Task<ActionResult<ICollection<Shift>>> GetShiftsAsync()
     {
-        var shifts = await _shiftRepository.GetShiftsAsync();
+        var shifts = _mapper.Map<List<ShiftDto>>(await _shiftRepository.GetShiftsAsync());
 
         if (shifts == null)
             return NotFound();
@@ -31,9 +35,10 @@ public class ShiftController : ControllerBase
 
     [HttpGet("{id:int}")]
     [ProducesResponseType(200, Type = typeof(Shift))]
+    [ProducesResponseType(400)]
     public async Task<ActionResult<Shift>> FindShiftAsync(int id)
     {
-        var shift = await _shiftRepository.FindShiftAsync(id);
+        var shift = _mapper.Map<ShiftDto>(await _shiftRepository.FindShiftAsync(id));
 
         if (shift == null)
             return NotFound();
@@ -44,9 +49,10 @@ public class ShiftController : ControllerBase
 
     [HttpPost]
     [ProducesResponseType(200, Type = typeof(Shift))]
+    [ProducesResponseType(400)]
     public async Task<ActionResult<Shift>> CreateShiftAsync(Shift shift)
     {
-        var newShift = await _shiftRepository.CreateShiftAsync(shift);
+        var newShift = _mapper.Map<ShiftDto>(await _shiftRepository.CreateShiftAsync(shift));
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
         return Ok(newShift);
@@ -54,6 +60,7 @@ public class ShiftController : ControllerBase
 
     [HttpDelete("{id:int}")]
     [ProducesResponseType(200, Type = typeof(string))]
+    [ProducesResponseType(400)]
     public async Task<ActionResult<string>> DeleteShiftAsync(int id)
     {
         var deleteResult = await _shiftRepository.DeleteShiftAsync(id);
@@ -67,9 +74,10 @@ public class ShiftController : ControllerBase
 
     [HttpPut("{id:int}")]
     [ProducesResponseType(200, Type = typeof(Shift))]
+    [ProducesResponseType(400)]
     public async Task<ActionResult<Employee>> UpdateEmployeeAsync(int id, Shift updatedShift)
     {
-        var shift = await _shiftRepository.UpdateShiftAsync(id, updatedShift);
+        var shift = _mapper.Map<ShiftDto>(await _shiftRepository.UpdateShiftAsync(id, updatedShift));
 
         if (!ModelState.IsValid)
             return BadRequest(ModelState);

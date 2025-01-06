@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ShiftsLoggerAPI.Interfaces;
 using ShiftsLoggerAPI.Models;
+using AutoMapper;
+using ShiftsLoggerAPI.Dto;
 
 namespace ShiftsLoggerAPI.Controllers;
 
@@ -9,17 +11,19 @@ namespace ShiftsLoggerAPI.Controllers;
 public class EmployeeController : ControllerBase
 {
     private readonly IEmployeeRepository? _employeeRepository;
-
-    public EmployeeController(IEmployeeRepository employeeRepository)
+    private readonly IMapper _mapper;
+    public EmployeeController(IEmployeeRepository employeeRepository, IMapper mapper)
     {
         _employeeRepository = employeeRepository;
+        _mapper = mapper;
     }
 
     [HttpGet]
     [ProducesResponseType(200, Type = typeof(ICollection<Employee>))]
+    [ProducesResponseType(400)]
     public async Task<ActionResult<ICollection<Employee>>> GetEmployeesAsync()
     {
-        var emps = await _employeeRepository.GetEmployeesAsync();
+        var emps = _mapper.Map<List<EmployeeDto>>(await _employeeRepository.GetEmployeesAsync());
 
         if (emps == null)
             return NotFound();
@@ -30,9 +34,10 @@ public class EmployeeController : ControllerBase
 
     [HttpGet("{id:int}")]
     [ProducesResponseType(200, Type = typeof(Employee))]
+    [ProducesResponseType(400)]
     public async Task<ActionResult<ICollection<Employee>>> FindEmployeeAsync(int id)
     {
-        var emp = await _employeeRepository.FindEmployeeAsync(id);
+        var emp = _mapper.Map<EmployeeDto>(await _employeeRepository.FindEmployeeAsync(id));
 
         if (emp == null)
             return NotFound();
@@ -45,20 +50,20 @@ public class EmployeeController : ControllerBase
     [ProducesResponseType(200, Type = typeof(Employee))]
     public async Task<ActionResult<Employee>> CreateEmployeeAsync(Employee employee)
     {
-        return Ok(await _employeeRepository.CreateEmployeeAsync(employee));
+        return Ok(_mapper.Map<EmployeeDto>(await _employeeRepository.CreateEmployeeAsync(employee)));
     }
 
     [HttpDelete("{id:int}")]
     [ProducesResponseType(200, Type = typeof(string))]
     public async Task<ActionResult<string>> DeleteEmployeeAsync(int id)
     {
-        return Ok(await _employeeRepository.DeleteEmployeeAsync(id));
+        return Ok(_mapper.Map<EmployeeDto>(await _employeeRepository.DeleteEmployeeAsync(id)));
     }
 
     [HttpPut("{id:int}")]
     [ProducesResponseType(200, Type = typeof(Employee))]
     public async Task<ActionResult<Employee>> UpdateEmployeeAsync(int id, Employee updatedEmployee)
     {
-        return Ok(await _employeeRepository.UpdateEmployeeAsync(id, updatedEmployee));
+        return Ok(_mapper.Map<EmployeeDto>(await _employeeRepository.UpdateEmployeeAsync(id, updatedEmployee)));
     }
 }

@@ -22,7 +22,7 @@ internal class ShiftRepository : IShiftRepository
 
     public async Task<string> DeleteShiftAsync(int id)
     {
-        var shift = await _context.Shifts.FirstOrDefaultAsync(s => s.ShiftId == id);
+        var shift = await _context.Shifts.Where(s => s.ShiftId == id).FirstOrDefaultAsync();
 
         if (shift == null)
             return null;
@@ -34,7 +34,7 @@ internal class ShiftRepository : IShiftRepository
 
     public async Task<Shift> FindShiftAsync(int id)
     {
-        var shift = await _context.Shifts.AsNoTracking().FirstOrDefaultAsync(s => s.ShiftId == id);
+        var shift = await _context.Shifts.AsNoTracking().Where(s => s.ShiftId == id).FirstOrDefaultAsync();
 
         if (shift == null)
             return null;
@@ -49,7 +49,7 @@ internal class ShiftRepository : IShiftRepository
 
     public async Task<Shift> UpdateShiftAsync(int id, Shift updatedShift)
     {
-        var shift = await _context.Shifts.FirstOrDefaultAsync(s => s.ShiftId == id);
+        var shift = await _context.Shifts.Where(s => s.ShiftId == id).FirstOrDefaultAsync();
 
         if (shift == null)
             return null;
