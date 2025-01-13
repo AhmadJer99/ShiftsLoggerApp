@@ -10,6 +10,4 @@ public class Employee
     public string? EmployeeName { get; set; }
     [JsonProperty("empPhone")]
     public string? EmployeePhone { get; set; }
-    [JsonProperty("empShifts")]
-    public List<Shift>? Shifts { get; set; }
 }

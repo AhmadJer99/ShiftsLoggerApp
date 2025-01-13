@@ -14,7 +14,7 @@ public class SeedController : ControllerBase
         _seedRepository = seedRepository;
     }
 
-    [HttpPost("/SeedEmployees")]
+    [HttpPost("SeedEmployees")]
     [ProducesResponseType(200, Type = typeof(string))]
     public async Task<ActionResult> SeedEmployeesAsync()
     {

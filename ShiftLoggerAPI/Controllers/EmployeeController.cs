@@ -48,7 +48,7 @@ public class EmployeeController : ControllerBase
 
     [HttpPost]
     [ProducesResponseType(200, Type = typeof(Employee))]
-    public async Task<ActionResult<Employee>> CreateEmployeeAsync(Employee employee)
+    public async Task<ActionResult<Employee>> CreateEmployeeAsync([FromBody] Employee employee)
     {
         return Ok(_mapper.Map<EmployeeDto>(await _employeeRepository.CreateEmployeeAsync(employee)));
     }
@@ -62,7 +62,7 @@ public class EmployeeController : ControllerBase
 
     [HttpPut("{id:int}")]
     [ProducesResponseType(200, Type = typeof(Employee))]
-    public async Task<ActionResult<Employee>> UpdateEmployeeAsync(int id, Employee updatedEmployee)
+    public async Task<ActionResult<Employee>> UpdateEmployeeAsync(int id, [FromBody] Employee updatedEmployee)
     {
         return Ok(_mapper.Map<EmployeeDto>(await _employeeRepository.UpdateEmployeeAsync(id, updatedEmployee)));
     }

@@ -50,7 +50,7 @@ public class ShiftController : ControllerBase
     [HttpPost]
     [ProducesResponseType(200, Type = typeof(Shift))]
     [ProducesResponseType(400)]
-    public async Task<ActionResult<Shift>> CreateShiftAsync(Shift shift)
+    public async Task<ActionResult<Shift>> CreateShiftAsync([FromBody] Shift shift)
     {
         var newShift = _mapper.Map<ShiftDto>(await _shiftRepository.CreateShiftAsync(shift));
         if (!ModelState.IsValid)
@@ -75,7 +75,7 @@ public class ShiftController : ControllerBase
     [HttpPut("{id:int}")]
     [ProducesResponseType(200, Type = typeof(Shift))]
     [ProducesResponseType(400)]
-    public async Task<ActionResult<Employee>> UpdateEmployeeAsync(int id, Shift updatedShift)
+    public async Task<ActionResult<Employee>> UpdateEmployeeAsync(int id, [FromBody] Shift updatedShift)
     {
         var shift = _mapper.Map<ShiftDto>(await _shiftRepository.UpdateShiftAsync(id, updatedShift));
 
