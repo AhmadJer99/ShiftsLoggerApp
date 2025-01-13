@@ -1,12 +1,20 @@
-﻿using Spectre.Console;
+﻿using ShiftsLoggerUI.Services;
+using Spectre.Console;
 
 namespace ShiftsLoggerUI.Menus;
 
 internal class MainMenu : BaseMenu
 {
+    private readonly SeedingService _seedingService;
+
+    public MainMenu(SeedingService seedingService)
+    {
+        _seedingService = seedingService;
+    }
+
     private enum MenuOptions
     {
-        Users,
+        Employees,
         Shifts,
         Seed,
         Exit
@@ -23,8 +31,8 @@ internal class MainMenu : BaseMenu
 
             switch (selectedOption)
             {
-                case MenuOptions.Users:
-                    UsersMenu usersMenu = new();
+                case MenuOptions.Employees:
+                    EmployeeMenu usersMenu = new();
                     await usersMenu.ShowMenuAsync();
                     break;
                 case MenuOptions.Shifts:
@@ -33,7 +41,7 @@ internal class MainMenu : BaseMenu
                     // Redirect to shifts menu
                     break;
                 case MenuOptions.Seed:
-                    // Seed the database with N rows of random data
+                    await _seedingService.SeedDbAsync(5);
                     break;
                 case MenuOptions.Exit:
                     AnsiConsole.MarkupLine("[Green]Cya![/]");

@@ -2,13 +2,13 @@
 
 namespace ShiftsLoggerUI.Menus
 {
-    internal class UsersMenu : BaseMenu
+    internal class EmployeeMenu : BaseMenu
     {
         private readonly List<string> _menuOptions =
             [
-                "1.Search User",
-                "2.New User",
-                "3.All Users",
+                "1.Search Employee",
+                "2.New Employee",
+                "3.All Employees",
                 "4.Main Menu",
             ];
 
