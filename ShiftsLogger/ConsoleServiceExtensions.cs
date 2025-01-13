@@ -18,7 +18,6 @@ public static class ConsoleServiceExtensions
     {
         services.AddScoped<EmployeeController>();
         services.AddScoped<ShiftController>();
-        services.AddScoped<SeedController>();
 
         return services;
     }

@@ -24,6 +24,7 @@ internal class MainMenu : BaseMenu
     {
         while (true)
         {
+            Console.Clear();
             var selectedOption = AnsiConsole.Prompt(
             new SelectionPrompt<MenuOptions>()
             .Title("[teal]Main Menu[/]")
@@ -41,7 +42,8 @@ internal class MainMenu : BaseMenu
                     // Redirect to shifts menu
                     break;
                 case MenuOptions.Seed:
-                    await _seedingService.SeedDbAsync(5);
+                    var rows = AnsiConsole.Ask<int>("How many rows would you like to seed?");
+                    await _seedingService.SeedDbAsync(rows);
                     break;
                 case MenuOptions.Exit:
                     AnsiConsole.MarkupLine("[Green]Cya![/]");

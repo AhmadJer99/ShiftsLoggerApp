@@ -1,5 +1,4 @@
-﻿using Azure;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Spectre.Console;
 
 namespace ShiftsLoggerUI.Services;
@@ -8,7 +7,6 @@ public class SeedingService : BaseService
 {
     public SeedingService(IConfiguration configuration) : base(configuration)
     {
-        
     }
     
     public async Task SeedDbAsync(int randRowNumber)
@@ -20,7 +18,8 @@ public class SeedingService : BaseService
 
             if (empSeedResponse.IsSuccessStatusCode && shiftSeedResponse.IsSuccessStatusCode)
             {
-                AnsiConsole.MarkupLine($"[green]{empSeedResponse.Content}[/]");
+                //AnsiConsole.MarkupLine($"[green]{empSeedResponse.Content}[/]");
+                AnsiConsole.MarkupLine($"[green]Data base seeded successfully![/]");
                 Console.ReadLine();
             }
             else
