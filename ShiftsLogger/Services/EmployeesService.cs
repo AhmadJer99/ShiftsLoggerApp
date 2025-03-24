@@ -4,6 +4,7 @@ using Spectre.Console;
 using Newtonsoft.Json;
 using System.Net.Http.Json;
 using System.Net.Http.Headers;
+using System.Text;
 
 namespace ShiftsLoggerUI.Services;
 
@@ -19,7 +20,12 @@ public class EmployeesService : BaseService, IService<Employee>
         var createdEmployee = new Employee();
         try
         {
-            using var response = await _client.PostAsJsonAsync("api/Employee", newEmployee);
+            using var requestMessage = new HttpRequestMessage(HttpMethod.Post, "api/Employee")
+            {
+                Content = new StringContent(JsonConvert.SerializeObject(newEmployee), Encoding.UTF8, "application/json")
+            };
+            using var response = await _client.SendAsync(requestMessage);
+
             if (response.IsSuccessStatusCode)
             {
                 var content = await response.Content.ReadAsStreamAsync();

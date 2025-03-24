@@ -1,6 +1,7 @@
 ﻿using ShiftsLoggerUI.Services;
 using ShiftsLoggerUI.Models;
 using Spectre.Console;
+using Newtonsoft.Json;
 
 namespace ShiftsLoggerUI.Menus
 {
@@ -45,6 +46,7 @@ namespace ShiftsLoggerUI.Menus
                         {
                             Console.WriteLine(emp.EmployeeName);
                         }
+                       
                         // List all the workers for the users to see.
                         break;
                     case string selection when selection.Contains("4."):
@@ -55,13 +57,17 @@ namespace ShiftsLoggerUI.Menus
         }
 
         private async Task AddNewEmployee()
-        {
+            {
             Console.Clear();
-            var newEmployee = new Employee();
-            newEmployee.EmployeeName = AnsiConsole.Ask<string>("Employee's Name: ");
-            newEmployee.EmployeeName = AnsiConsole.Ask<string>("\nEmployee's Phone Number: ");
+
+            var newEmployee = new Employee
+            {
+                EmployeeName = AnsiConsole.Ask<string>("Employee's Name: "),
+                EmployeePhone = AnsiConsole.Ask<string>("\nEmployee's Phone Number: ")
+            };
+            Console.WriteLine(JsonConvert.SerializeObject(newEmployee));
             var createdEmployee = await _employeesService.Create(newEmployee);
-            Console.WriteLine(createdEmployee.EmployeeName,createdEmployee.EmployeePhone);
+            Console.WriteLine(createdEmployee);
         }
     }
 }

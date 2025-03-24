@@ -14,6 +14,4 @@ public class Shift
     public DateTime? ShiftEndTime { get; set; }
     [JsonProperty("shiftDurationHours")]
     public int ShiftDuration { get; set; }
-    [JsonProperty("employee")]
-    public Employee? Employee { get; set; }
 }

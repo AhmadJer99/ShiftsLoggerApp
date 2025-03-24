@@ -12,6 +12,7 @@ using IHost host = Host.CreateDefaultBuilder(args)
         })
         .ConfigureServices((_, services) =>
         {
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddLogging(c => c.ClearProviders());
             services.AddSingleton<HttpClient>();
             services.AddMenuServices();
