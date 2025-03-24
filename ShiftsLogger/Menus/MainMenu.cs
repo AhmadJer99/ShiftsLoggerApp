@@ -6,10 +6,14 @@ namespace ShiftsLoggerUI.Menus;
 internal class MainMenu : BaseMenu
 {
     private readonly SeedingService _seedingService;
+    private readonly EmployeeMenu _employeeMenu;
+    private readonly ShiftsMenu _shiftsMenu;
 
-    public MainMenu(SeedingService seedingService)
+    public MainMenu(SeedingService seedingService, EmployeeMenu employeeMenu, ShiftsMenu shiftsMenu)
     {
         _seedingService = seedingService;
+        _employeeMenu = employeeMenu;
+        _shiftsMenu = shiftsMenu;
     }
 
     private enum MenuOptions
@@ -25,6 +29,7 @@ internal class MainMenu : BaseMenu
         while (true)
         {
             Console.Clear();
+
             var selectedOption = AnsiConsole.Prompt(
             new SelectionPrompt<MenuOptions>()
             .Title("[teal]Main Menu[/]")
@@ -33,12 +38,10 @@ internal class MainMenu : BaseMenu
             switch (selectedOption)
             {
                 case MenuOptions.Employees:
-                    EmployeeMenu usersMenu = new();
-                    await usersMenu.ShowMenuAsync();
+                    await _employeeMenu.ShowMenuAsync();
                     break;
                 case MenuOptions.Shifts:
-                    ShiftsMenu shiftsMenu = new();
-                    await shiftsMenu.ShowMenuAsync();
+                    await _shiftsMenu.ShowMenuAsync();
                     // Redirect to shifts menu
                     break;
                 case MenuOptions.Seed:

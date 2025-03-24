@@ -47,6 +47,7 @@ internal class ShiftRepository : IShiftRepository
         return await _context.Shifts.AsNoTracking().ToListAsync();
     }
 
+
     public async Task<Shift> UpdateShiftAsync(int id, Shift updatedShift)
     {
         var shift = await _context.Shifts.Where(s => s.ShiftId == id).FirstOrDefaultAsync();
@@ -54,9 +55,17 @@ internal class ShiftRepository : IShiftRepository
         if (shift == null)
             return null;
 
-        _context.Entry(shift).CurrentValues.SetValues(updatedShift);
-        _context.SaveChanges();
+        if (updatedShift.StartDateTime != default)
+            shift.StartDateTime = updatedShift.StartDateTime;
 
+        if (updatedShift.EndDateTime != default)
+            shift.EndDateTime = updatedShift.EndDateTime;
+
+        if (updatedShift.EmpId != 0)
+            shift.EmpId = updatedShift.EmpId;
+
+        await _context.SaveChangesAsync();
         return shift;
     }
+
 }

@@ -1,11 +1,10 @@
 ﻿namespace ShiftsLoggerUI.Services;
 
-public interface IService
+public interface IService<T>
 {
-    public Task GetAll();
-    public Task Find(int id);
-    public Task Create(object newObject);
-    public Task Update(int id, object updatedObject);
-    public Task Delete(int id);
-
+    public Task<List<T>> GetAll();
+    public Task<T> Find(int id);
+    public Task<T> Create(T newObject);
+    public Task<T> Update(int id, object updatedObject);
+    public Task<T> Delete(int id);
 }

@@ -41,14 +41,18 @@ public class EmployeeRepository : IEmployeeRepository
 
     public async Task<Employee> UpdateEmployeeAsync(int id, Employee updatedEmployee)
     {
-        var emp = await _context.Employees.AsNoTracking().Where(e => e.EmpId == id).FirstOrDefaultAsync();
-
+        var emp = await _context.Employees.FindAsync(id);
         if (emp == null)
             return null;
 
-        _context.Entry(emp).CurrentValues.SetValues(updatedEmployee);
-        _context.SaveChanges();
+        // Use only the fields that were provided in the request
+        if (!string.IsNullOrEmpty(updatedEmployee.EmpName))
+            emp.EmpName = updatedEmployee.EmpName;
 
+        if (!string.IsNullOrEmpty(updatedEmployee.EmpPhone))
+            emp.EmpPhone = updatedEmployee.EmpPhone;
+
+        await _context.SaveChangesAsync();
         return emp;
     }
 

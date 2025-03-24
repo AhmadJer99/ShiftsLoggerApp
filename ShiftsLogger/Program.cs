@@ -13,11 +13,11 @@ using IHost host = Host.CreateDefaultBuilder(args)
         .ConfigureServices((_, services) =>
         {
             services.AddLogging(c => c.ClearProviders());
-            services.AddControllers();
             services.AddSingleton<HttpClient>();
             services.AddMenuServices();
             services.AddConsoleControllers();
             services.AddConsoleServices();
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         }).Build();
 
 var mainMenu = host.Services.GetRequiredService<MainMenu>();

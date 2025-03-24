@@ -57,13 +57,23 @@ public class EmployeeController : ControllerBase
     [ProducesResponseType(200, Type = typeof(string))]
     public async Task<ActionResult<string>> DeleteEmployeeAsync(int id)
     {
-        return Ok(_mapper.Map<EmployeeDto>(await _employeeRepository.DeleteEmployeeAsync(id)));
+        return Ok(await _employeeRepository.DeleteEmployeeAsync(id));
     }
+
+
 
     [HttpPut("{id:int}")]
     [ProducesResponseType(200, Type = typeof(Employee))]
     public async Task<ActionResult<Employee>> UpdateEmployeeAsync(int id, [FromBody] Employee updatedEmployee)
     {
-        return Ok(_mapper.Map<EmployeeDto>(await _employeeRepository.UpdateEmployeeAsync(id, updatedEmployee)));
+        updatedEmployee.EmpId = id;
+
+        var updatedEmp = await _employeeRepository.UpdateEmployeeAsync(id, updatedEmployee);
+
+        if (updatedEmp == null)
+            return NotFound();
+
+        return Ok(_mapper.Map<EmployeeDto>(updatedEmp));
     }
+
 }

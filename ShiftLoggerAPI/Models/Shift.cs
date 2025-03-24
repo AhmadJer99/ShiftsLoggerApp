@@ -8,16 +8,10 @@ public class Shift
     public DateTime StartDateTime { get; set; }
     public DateTime EndDateTime { get; set; }
 
-    private int? _manualDuration;
     public int ShiftDurationHours
     {
         get
         {
-            if (_manualDuration.HasValue)
-            {
-                return _manualDuration.Value;
-            }
-
             var endTime = EndDateTime;
             var startTime = StartDateTime;
 
@@ -26,10 +20,6 @@ public class Shift
                 endTime = EndDateTime.AddDays(1);
             }
             return endTime.Subtract(startTime).Hours;
-        }
-        set
-        {
-            _manualDuration = value;
         }
     }
 }

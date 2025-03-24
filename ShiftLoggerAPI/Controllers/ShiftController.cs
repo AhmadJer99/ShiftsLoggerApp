@@ -12,7 +12,6 @@ public class ShiftController : ControllerBase
 {
     private readonly IShiftRepository? _shiftRepository;
     private readonly IMapper _mapper;
-
     public ShiftController(IShiftRepository shiftRepository, IMapper mapper)
     {
         _shiftRepository = shiftRepository;
@@ -75,14 +74,18 @@ public class ShiftController : ControllerBase
     [HttpPut("{id:int}")]
     [ProducesResponseType(200, Type = typeof(Shift))]
     [ProducesResponseType(400)]
-    public async Task<ActionResult<Employee>> UpdateEmployeeAsync(int id, [FromBody] Shift updatedShift)
+    public async Task<ActionResult<Shift>> UpdateEmployeeAsync(int id, [FromBody] Shift updatedShift)
     {
-        var shift = _mapper.Map<ShiftDto>(await _shiftRepository.UpdateShiftAsync(id, updatedShift));
-
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
+
+        updatedShift.ShiftId = id;
+
+        var shift = await _shiftRepository.UpdateShiftAsync(id, updatedShift);
+
         if (shift == null)
             return NotFound();
-        return Ok(shift);
+
+        return Ok(_mapper.Map<ShiftDto>(shift));
     }
 }
