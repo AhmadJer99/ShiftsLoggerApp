@@ -74,8 +74,6 @@ public class EmployeeController : ControllerBase
         return Ok(await _employeeRepository.DeleteEmployeeAsync(id));
     }
 
-
-
     [HttpPut("{id:int}")]
     [ProducesResponseType(200, Type = typeof(Employee))]
     public async Task<ActionResult<Employee>> UpdateEmployeeAsync(int id, [FromBody] Employee updatedEmployee)

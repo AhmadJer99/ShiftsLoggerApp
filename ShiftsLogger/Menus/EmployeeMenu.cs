@@ -22,6 +22,13 @@ namespace ShiftsLoggerUI.Menus
                 "4.Main Menu",
             ];
 
+        private readonly List<string> _employeeOptions =
+            [
+                "1.Edit",
+                "2.Delete",
+                "3.Back"
+            ];
+
         public override async Task ShowMenuAsync()
         {
             while (true)
@@ -52,8 +59,39 @@ namespace ShiftsLoggerUI.Menus
         private async Task GetAllEmployees()
         {
             var emps = await _employeesService.GetAll();
+
+            var selectedEmployee = AnsiConsole.Prompt(
+                    new SelectionPrompt<Employee>()
+                    .Title("[teal]Select an employee to further operate on:[/]")
+                    .UseConverter(b => $"{b.EmployeeName}")
+                    .AddChoices(emps));
+
+            var selectedOption = AnsiConsole.Prompt(
+                    new SelectionPrompt<string>()
+                    .Title("[teal]Employee Operations[/]")
+                    .AddChoices(_employeeOptions));
+
+            switch (selectedOption)
+            {
+                case string selection when selection.Contains("1."):
+                    var updatedEmployee = new Employee
+                    {
+                        EmployeeName = AnsiConsole.Ask<string>("Employee's Name: "),
+                        EmployeePhone = AnsiConsole.Ask<string>("\nEmployee's Phone Number: ")
+                    };
+                    await _employeesService.Update(selectedEmployee.EmployeeId, updatedEmployee);
+                    break;
+                case string selection when selection.Contains("2."):
+                    AnsiConsole.MarkupLine($"[red]{ await _employeesService.Delete(selectedEmployee.EmployeeId)}[/]");
+                    break;
+                case string selection when selection.Contains("3."):
+                    // return;
+                    break;
+            }
+
             foreach (var emp in emps)
             {
+                Console.WriteLine(JsonConvert.SerializeObject(emp));
                 Console.WriteLine(emp.EmployeeName);
             }
             PressAnyKeyToContinue();

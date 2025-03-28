@@ -6,5 +6,5 @@ public interface IService<T>
     public Task<T> Find(int id);
     public Task<T> Create(T newObject);
     public Task<T> Update(int id, object updatedObject);
-    public Task<T> Delete(int id);
+    public Task<string> Delete(int id);
 }

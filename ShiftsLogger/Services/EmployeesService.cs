@@ -2,8 +2,6 @@
 using ShiftsLoggerUI.Models;
 using Spectre.Console;
 using Newtonsoft.Json;
-using System.Net.Http.Json;
-using System.Net.Http.Headers;
 using System.Text;
 
 namespace ShiftsLoggerUI.Services;
@@ -48,11 +46,25 @@ public class EmployeesService : BaseService, IService<Employee>
         return createdEmployee;
     }
 
-    public Task<Employee> Delete(int id)
+    public async Task<string> Delete(int id)
     {
-        throw new NotImplementedException();
-    }
+        var responseMessage = string.Empty;
+        try
+        {
+            using var response = await _client.DeleteAsync($"/api/Employee/{id}");
 
+            if (response.IsSuccessStatusCode)
+                 responseMessage = await response.Content.ReadAsStringAsync();
+            else
+                AnsiConsole.MarkupLine($"[red]{response.StatusCode}[/]");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("There was an error: " + ex.Message);
+        }
+
+        return responseMessage;
+    }
 
     public async Task<Employee> Find(int id)
     {
