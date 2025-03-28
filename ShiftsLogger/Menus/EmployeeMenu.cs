@@ -8,7 +8,7 @@ namespace ShiftsLoggerUI.Menus
     internal class EmployeeMenu : BaseMenu
     {
         private readonly EmployeesService _employeesService;
-        
+
         public EmployeeMenu(EmployeesService employeesService)
         {
             _employeesService = employeesService;
@@ -34,20 +34,13 @@ namespace ShiftsLoggerUI.Menus
                 switch (selectedOption)
                 {
                     case string selection when selection.Contains("1."):
-                        // get a user name to search for it and display its stats , and add some options to edit values , or delete it.
+                        await SearchEmployee();
                         break;
                     case string selection when selection.Contains("2."):
                         await AddNewEmployee();
-                        // Prompt the user to create a worker and prompt him with the appropriate Json values.
                         break;
                     case string selection when selection.Contains("3."):
-                        var emps = await _employeesService.GetAll();
-                        foreach ( var emp in emps)
-                        {
-                            Console.WriteLine(emp.EmployeeName);
-                        }
-                       
-                        // List all the workers for the users to see.
+                        await GetAllEmployees();
                         break;
                     case string selection when selection.Contains("4."):
                         return;
@@ -56,8 +49,28 @@ namespace ShiftsLoggerUI.Menus
             }
         }
 
-        private async Task AddNewEmployee()
+        private async Task GetAllEmployees()
+        {
+            var emps = await _employeesService.GetAll();
+            foreach (var emp in emps)
             {
+                Console.WriteLine(emp.EmployeeName);
+            }
+            PressAnyKeyToContinue();
+        }
+
+        private async Task SearchEmployee()
+        {
+            Console.Clear();
+            var employeeName = AnsiConsole.Ask<string>("Employee's Name: ");
+            var employee = await _employeesService.Find(employeeName);
+
+            Console.WriteLine(JsonConvert.SerializeObject(employee));
+            PressAnyKeyToContinue();
+        }
+
+        private async Task AddNewEmployee()
+        {
             Console.Clear();
 
             var newEmployee = new Employee
@@ -68,6 +81,14 @@ namespace ShiftsLoggerUI.Menus
             Console.WriteLine(JsonConvert.SerializeObject(newEmployee));
             var createdEmployee = await _employeesService.Create(newEmployee);
             Console.WriteLine(createdEmployee);
+            PressAnyKeyToContinue();
+        }
+
+        private static void PressAnyKeyToContinue()
+        {
+            AnsiConsole.MarkupLine("[green]Press Any Key To Continue[/]");
+            Console.ReadKey();
+            Console.Clear();
         }
     }
 }

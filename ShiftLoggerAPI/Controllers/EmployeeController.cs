@@ -32,12 +32,26 @@ public class EmployeeController : ControllerBase
         return Ok(emps);
     }
 
-    [HttpGet("{id:int}")]
+    [HttpGet("id/{id:int}")]
     [ProducesResponseType(200, Type = typeof(Employee))]
     [ProducesResponseType(400)]
     public async Task<ActionResult<ICollection<Employee>>> FindEmployeeAsync(int id)
     {
         var emp = _mapper.Map<EmployeeDto>(await _employeeRepository.FindEmployeeAsync(id));
+
+        if (emp == null)
+            return NotFound();
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+        return Ok(emp);
+    }
+
+    [HttpGet("name/{name}")]
+    [ProducesResponseType(200, Type = typeof(Employee))]
+    [ProducesResponseType(400)]
+    public async Task<ActionResult<ICollection<Employee>>> FindEmployeeAsync(string name)
+    {
+        var emp = _mapper.Map<EmployeeDto>(await _employeeRepository.FindEmployeeAsync(name));
 
         if (emp == null)
             return NotFound();

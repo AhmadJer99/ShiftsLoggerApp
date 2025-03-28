@@ -59,7 +59,37 @@ public class EmployeesService : BaseService, IService<Employee>
         var employee = new Employee();
         try
         {
-            using var response = await _client.GetAsync($"api/Employee/{id}");
+            using var response = await _client.GetAsync($"api/Employee/id/{id}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStreamAsync();
+
+                using var streamReader = new StreamReader(content);
+                using var jsonReader = new JsonTextReader(streamReader);
+
+                var serializer = new JsonSerializer();
+                employee = serializer.Deserialize<Employee>(jsonReader);
+            }
+            else
+            {
+                AnsiConsole.MarkupLine($"[red]{response.StatusCode}[/]");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("There was an error: " + ex.Message);
+        }
+
+        return employee;
+    }
+
+    public async Task<Employee> Find(string name)
+    {
+        var employee = new Employee();
+        try
+        {
+            using var response = await _client.GetAsync($"api/Employee/name/{name}");
 
             if (response.IsSuccessStatusCode)
             {
