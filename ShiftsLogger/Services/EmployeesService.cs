@@ -158,8 +158,36 @@ public class EmployeesService : BaseService, IService<Employee>
         return employees;
     }
 
-    public Task<Employee> Update(int id, object updatedObject)
+    public async Task<Employee> Update(int id, Employee updatedEmployee)
     {
-        throw new NotImplementedException();
+        var responseUpdatedEmployee = new Employee();
+        try
+        {
+            using var requestMessage = new HttpRequestMessage(HttpMethod.Put, $"/api/Employee/{id}")
+            {
+                Content = new StringContent(JsonConvert.SerializeObject(updatedEmployee), Encoding.UTF8, "application/json")
+            };
+            using var response = await _client.SendAsync(requestMessage);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStreamAsync();
+
+                using var streamReader = new StreamReader(content);
+                using var jsonReader = new JsonTextReader(streamReader);
+
+                var serializer = new JsonSerializer();
+                responseUpdatedEmployee = serializer.Deserialize<Employee>(jsonReader);
+            }
+            else
+            {
+                AnsiConsole.MarkupLine($"[red]{response.StatusCode}[/]");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("There was an error: " + ex.Message);
+        }
+        return responseUpdatedEmployee;
     }
 }

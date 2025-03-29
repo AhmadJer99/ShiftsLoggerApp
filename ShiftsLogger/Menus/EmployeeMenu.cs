@@ -24,9 +24,11 @@ namespace ShiftsLoggerUI.Menus
 
         private readonly List<string> _employeeOptions =
             [
+                
                 "1.Edit",
                 "2.Delete",
-                "3.Back"
+                "3.Shifts",
+                "4.Back"
             ];
 
         public override async Task ShowMenuAsync()
@@ -65,7 +67,8 @@ namespace ShiftsLoggerUI.Menus
                     .Title("[teal]Select an employee to further operate on:[/]")
                     .UseConverter(b => $"{b.EmployeeName}")
                     .AddChoices(emps));
-
+            Console.Clear();
+            AnsiConsole.MarkupLine($"[bold]Selected Employee:[/] ID({selectedEmployee.EmployeeId})-{selectedEmployee.EmployeeName}\t[bold]Phone Number:[/] {selectedEmployee.EmployeePhone}");
             var selectedOption = AnsiConsole.Prompt(
                     new SelectionPrompt<string>()
                     .Title("[teal]Employee Operations[/]")
@@ -82,17 +85,14 @@ namespace ShiftsLoggerUI.Menus
                     await _employeesService.Update(selectedEmployee.EmployeeId, updatedEmployee);
                     break;
                 case string selection when selection.Contains("2."):
-                    AnsiConsole.MarkupLine($"[red]{ await _employeesService.Delete(selectedEmployee.EmployeeId)}[/]");
+                    AnsiConsole.MarkupLine($"[red]{await _employeesService.Delete(selectedEmployee.EmployeeId)}[/]");
                     break;
                 case string selection when selection.Contains("3."):
+                    // Show all the shifts affiliated with the selected employee
+                    break;
+                case string selection when selection.Contains("4."):
                     // return;
                     break;
-            }
-
-            foreach (var emp in emps)
-            {
-                Console.WriteLine(JsonConvert.SerializeObject(emp));
-                Console.WriteLine(emp.EmployeeName);
             }
             PressAnyKeyToContinue();
         }
