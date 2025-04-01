@@ -24,7 +24,7 @@ namespace ShiftsLoggerUI.Menus
 
         private readonly List<string> _employeeOptions =
             [
-                
+
                 "1.Edit",
                 "2.Delete",
                 "3.Shifts",
@@ -61,39 +61,19 @@ namespace ShiftsLoggerUI.Menus
         private async Task GetAllEmployees()
         {
             var emps = await _employeesService.GetAll();
-
+            if (emps.Count == 0)
+            {
+                AnsiConsole.MarkupLine("[red]No Employees Found![/]");
+                PressAnyKeyToContinue();
+                return;
+            }
             var selectedEmployee = AnsiConsole.Prompt(
                     new SelectionPrompt<Employee>()
                     .Title("[teal]Select an employee to further operate on:[/]")
                     .UseConverter(b => $"{b.EmployeeName}")
                     .AddChoices(emps));
-            Console.Clear();
-            AnsiConsole.MarkupLine($"[bold]Selected Employee:[/] ID({selectedEmployee.EmployeeId})-{selectedEmployee.EmployeeName}\t[bold]Phone Number:[/] {selectedEmployee.EmployeePhone}");
-            var selectedOption = AnsiConsole.Prompt(
-                    new SelectionPrompt<string>()
-                    .Title("[teal]Employee Operations[/]")
-                    .AddChoices(_employeeOptions));
 
-            switch (selectedOption)
-            {
-                case string selection when selection.Contains("1."):
-                    var updatedEmployee = new Employee
-                    {
-                        EmployeeName = AnsiConsole.Ask<string>("Employee's Name: "),
-                        EmployeePhone = AnsiConsole.Ask<string>("\nEmployee's Phone Number: ")
-                    };
-                    await _employeesService.Update(selectedEmployee.EmployeeId, updatedEmployee);
-                    break;
-                case string selection when selection.Contains("2."):
-                    AnsiConsole.MarkupLine($"[red]{await _employeesService.Delete(selectedEmployee.EmployeeId)}[/]");
-                    break;
-                case string selection when selection.Contains("3."):
-                    // Show all the shifts affiliated with the selected employee
-                    break;
-                case string selection when selection.Contains("4."):
-                    // return;
-                    break;
-            }
+            await OperateOnEmployee(selectedEmployee);
             PressAnyKeyToContinue();
         }
 
@@ -102,8 +82,13 @@ namespace ShiftsLoggerUI.Menus
             Console.Clear();
             var employeeName = AnsiConsole.Ask<string>("Employee's Name: ");
             var employee = await _employeesService.Find(employeeName);
-
-            Console.WriteLine(JsonConvert.SerializeObject(employee));
+            if (employee.EmployeeId == 0)
+            {
+                AnsiConsole.MarkupLine("[red]Employee not found![/]");
+                PressAnyKeyToContinue();
+                return;
+            }
+            await OperateOnEmployee(employee);
             PressAnyKeyToContinue();
         }
 
@@ -122,11 +107,35 @@ namespace ShiftsLoggerUI.Menus
             PressAnyKeyToContinue();
         }
 
-        private static void PressAnyKeyToContinue()
+        private async Task OperateOnEmployee(Employee employee)
         {
-            AnsiConsole.MarkupLine("[green]Press Any Key To Continue[/]");
-            Console.ReadKey();
             Console.Clear();
+            AnsiConsole.MarkupLine($"[bold]Selected Employee:[/] ID({employee.EmployeeId})-{employee.EmployeeName}\t[bold]Phone Number:[/] {employee.EmployeePhone}");
+            var selectedOption = AnsiConsole.Prompt(
+                    new SelectionPrompt<string>()
+                    .Title("[teal]Employee Operations[/]")
+                    .AddChoices(_employeeOptions));
+
+            switch (selectedOption)
+            {
+                case string selection when selection.Contains("1."):
+                    var updatedEmployee = new Employee
+                    {
+                        EmployeeName = AnsiConsole.Ask<string>("Employee's Name: "),
+                        EmployeePhone = AnsiConsole.Ask<string>("\nEmployee's Phone Number: ")
+                    };
+                    await _employeesService.Update(employee.EmployeeId, updatedEmployee);
+                    break;
+                case string selection when selection.Contains("2."):
+                    AnsiConsole.MarkupLine($"[red]{await _employeesService.Delete(employee.EmployeeId)}[/]");
+                    break;
+                case string selection when selection.Contains("3."):
+                    // Show all the shifts affiliated with the selected employee
+                    break;
+                case string selection when selection.Contains("4."):
+                    // return;
+                    break;
+            }
         }
     }
 }
