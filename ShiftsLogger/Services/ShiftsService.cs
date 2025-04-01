@@ -4,6 +4,7 @@ using ShiftsLoggerUI.Models;
 using Spectre.Console;
 using System.Text;
 
+
 namespace ShiftsLoggerUI.Services;
 
 internal class ShiftsService : BaseService, IService<Shift>
@@ -55,9 +56,34 @@ internal class ShiftsService : BaseService, IService<Shift>
         throw new NotImplementedException();
     }
 
-    public Task<List<Shift>> GetAll()
+    public async Task<List<Shift>> GetAll()
     {
-        throw new NotImplementedException();
+        var shifts = new List<Shift>();
+        try
+        {
+            using var response = await _client.GetAsync("/api/Shift");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStreamAsync();
+
+                using var streamReader = new StreamReader(content);
+                using var jsonReader = new JsonTextReader(streamReader);
+
+                var serializer = new JsonSerializer();
+                shifts = serializer.Deserialize<List<Shift>>(jsonReader);
+            }
+            else
+            {
+                AnsiConsole.MarkupLine($"[red]{response.StatusCode}[/]");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("There was an error: " + ex.Message);
+        }
+
+        return shifts;
     }
 
     public Task<Shift> Update(int id, Shift updatedObject)

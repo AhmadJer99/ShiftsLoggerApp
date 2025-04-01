@@ -19,6 +19,7 @@ using IHost host = Host.CreateDefaultBuilder(args)
             services.AddConsoleControllers();
             services.AddConsoleServices();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            
         }).Build();
 
 var mainMenu = host.Services.GetRequiredService<MainMenu>();

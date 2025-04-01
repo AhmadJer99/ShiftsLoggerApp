@@ -14,6 +14,7 @@ public static class ConsoleServiceExtensions
 
         return services;
     }
+
     public static IServiceCollection AddConsoleControllers(this IServiceCollection services)
     {
         services.AddScoped<EmployeeController>();
@@ -21,11 +22,13 @@ public static class ConsoleServiceExtensions
 
         return services;
     }
+
     public static IServiceCollection AddConsoleServices(this IServiceCollection services)
     {
         services.AddScoped<EmployeesService>();
         services.AddScoped<SeedingService>();
         services.AddScoped<ShiftsService>();
+        services.AddScoped<TableVisualisationEngine<object>>();
 
         return services;
     }
