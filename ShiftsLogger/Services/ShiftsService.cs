@@ -46,9 +46,24 @@ internal class ShiftsService : BaseService, IService<Shift>
         return createdShift;
     }
 
-    public Task<string> Delete(int id)
+    public async Task<string> Delete(int id)
     {
-        throw new NotImplementedException();
+        var responseMessage = string.Empty;
+        try
+        {
+            using var response = await _client.DeleteAsync($"/api/Shift/{id}");
+
+            if (response.IsSuccessStatusCode)
+                responseMessage = await response.Content.ReadAsStringAsync();
+            else
+                AnsiConsole.MarkupLine($"[red]{response.StatusCode}[/]");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("There was an error: " + ex.Message);
+        }
+
+        return responseMessage;
     }
 
     public Task<Shift> Find(int id)
@@ -86,8 +101,37 @@ internal class ShiftsService : BaseService, IService<Shift>
         return shifts;
     }
 
-    public Task<Shift> Update(int id, Shift updatedObject)
+    public async Task<Shift> Update(int id, Shift updatedShift)
     {
-        throw new NotImplementedException();
+        var responseUpdatedShift = new Shift();
+        try
+        {
+            using var requestMessage = new HttpRequestMessage(HttpMethod.Put, $"/api/Shift/{id}")
+            {
+                Content = new StringContent(JsonConvert.SerializeObject(updatedShift), Encoding.UTF8, "application/json")
+            };
+            using var response = await _client.SendAsync(requestMessage);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStreamAsync();
+
+                using var streamReader = new StreamReader(content);
+                using var jsonReader = new JsonTextReader(streamReader);
+
+                var serializer = new JsonSerializer();
+                responseUpdatedShift = serializer.Deserialize<Shift>(jsonReader);
+            }
+            else
+            {
+                AnsiConsole.MarkupLine($"[red]{response.StatusCode}[/]");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("There was an error: " + ex.Message);
+        }
+        return responseUpdatedShift;
     }
 }
+

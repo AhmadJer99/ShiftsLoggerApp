@@ -48,13 +48,60 @@ internal class ShiftsMenu : BaseMenu
                     await GetAllShifts();
                     break;
                 case string selection when selection.Contains("3."):
+                    await DeleteShift();
                     break;
                 case string selection when selection.Contains("4."):
+                    await UpdateShift();
                     break;
                 case string selection when selection.Contains("5."):
                     return;
             }
         }
+    }
+
+    private async Task UpdateShift()
+    {
+        Console.Clear();
+        var shiftId = AnsiConsole.Ask<int>("Enter Shift Id: ");
+
+        var updateChoice = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+                .Title("What would you like to update?")
+                .AddChoices("Start Time Only", "End Time Only", "Both","Cancel")
+        );
+
+        if (updateChoice == "Cancel")
+        {
+            return;
+        }
+
+        DateTime? startTime = null, endTime = null;
+
+        if (updateChoice == "Start Time Only" || updateChoice == "Both")
+        {
+            startTime = AnsiConsole.Ask<DateTime>("Enter Shift Start Time: ");
+        }
+
+        if (updateChoice == "End Time Only" || updateChoice == "Both")
+        {
+            endTime = AnsiConsole.Ask<DateTime>("Enter Shift End Time: ");
+        }
+
+        var updatedShift = new Shift()
+        {
+            ShiftStartTime = startTime ?? default,  
+            ShiftEndTime = endTime ?? default       
+        };
+
+        var shift = await _shiftsService.Update(shiftId, updatedShift);
+        PressAnyKeyToContinue();
+    }
+
+
+    private async Task DeleteShift()
+    {
+        var shiftId = AnsiConsole.Ask<int>("Enter Shift Id: ");
+        var deletedShift = await _shiftsService.Delete(shiftId);
     }
 
     private async Task GetAllShifts()
@@ -66,12 +113,6 @@ internal class ShiftsMenu : BaseMenu
             PressAnyKeyToContinue();
             return;
         }
-        //var selectedEmployee = AnsiConsole.Prompt(
-        //        new SelectionPrompt<Shift>()
-        //        .Title("[teal]Select an employee to further operate on:[/]")
-        //        .UseConverter(b => $"{b.EmpId},{b.ShiftId},{b.ShiftDuration}")
-        //        .AddChoices(shifts));
-
         TableVisualisationEngine<Shift>.ViewAsTable(shifts, TableAligntment.Center, new List<string> {"ShiftId" ,"EmpId", "Shift start time", "Shift end time","Duration (Hrs)"}, "Shifts");
 
         PressAnyKeyToContinue();
@@ -89,5 +130,4 @@ internal class ShiftsMenu : BaseMenu
         Console.WriteLine(JsonConvert.SerializeObject(createdShift));
         PressAnyKeyToContinue();
     }
-
 }
