@@ -66,9 +66,34 @@ internal class ShiftsService : BaseService, IService<Shift>
         return responseMessage;
     }
 
-    public Task<Shift> Find(int id)
+    public async Task<Shift> Find(int id)
     {
-        throw new NotImplementedException();
+        var shift = new Shift();
+        try
+        {
+            using var response = await _client.GetAsync($"/api/Shift/{id}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStreamAsync();
+
+                using var streamReader = new StreamReader(content);
+                using var jsonReader = new JsonTextReader(streamReader);
+
+                var serializer = new JsonSerializer();
+                shift = serializer.Deserialize<Shift>(jsonReader);
+            }
+            else
+            {
+                AnsiConsole.MarkupLine($"[red]{response.StatusCode}[/]");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("There was an error: " + ex.Message);
+        }
+
+        return shift;
     }
 
     public async Task<List<Shift>> GetAll()

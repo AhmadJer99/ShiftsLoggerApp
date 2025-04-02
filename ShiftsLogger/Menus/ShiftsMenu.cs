@@ -1,10 +1,8 @@
 ﻿using ShiftsLoggerUI.Models;
-using ShiftsLoggerUI.Dto;
 using Spectre.Console;
 using ShiftsLoggerUI.Services;
 using Newtonsoft.Json;
 using ConsoleTableExt;
-using ShiftsLoggerUI.Helpers;
 using AutoMapper;
 
 namespace ShiftsLoggerUI.Menus;
