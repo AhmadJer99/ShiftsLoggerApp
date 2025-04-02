@@ -158,5 +158,32 @@ internal class ShiftsService : BaseService, IService<Shift>
         }
         return responseUpdatedShift;
     }
-}
 
+    public async Task<List<Shift>> FindEmpShifts(int empId)
+    {
+        var shifts = new List<Shift>();
+        try
+        {
+            using var response = await _client.GetAsync($"/api/Shift/empId/{empId}");
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStreamAsync();
+
+                using var streamReader = new StreamReader(content);
+                using var jsonReader = new JsonTextReader(streamReader);
+
+                var serializer = new JsonSerializer();
+                shifts = serializer.Deserialize<List<Shift>>(jsonReader);
+            }
+            else
+            {
+                AnsiConsole.MarkupLine($"[red]{response.StatusCode}[/]");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("There was an error: " + ex.Message);
+        }
+        return shifts;
+    }
+}

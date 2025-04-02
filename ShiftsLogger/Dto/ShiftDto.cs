@@ -2,7 +2,7 @@
 
 public class ShiftDto
 {
-    public DateTime StartDateTime { get; set; }
-    public DateTime EndDateTime { get; set; }
-    public int ShiftDurationHours { get; set; }
+    public DateTime? ShiftStartTime { get; set; }
+    public DateTime? ShiftEndTime { get; set; }
+    public int ShiftDuration { get; set; }
 }

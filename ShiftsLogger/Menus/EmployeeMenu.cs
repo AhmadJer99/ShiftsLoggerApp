@@ -2,16 +2,23 @@
 using ShiftsLoggerUI.Models;
 using Spectre.Console;
 using Newtonsoft.Json;
+using AutoMapper;
+using ShiftsLoggerUI.Dto;
+using ConsoleTableExt;
 
 namespace ShiftsLoggerUI.Menus
 {
     internal class EmployeeMenu : BaseMenu
     {
         private readonly EmployeesService _employeesService;
+        private readonly ShiftsService _shiftsService;
+        private readonly IMapper _mapper;
 
-        public EmployeeMenu(EmployeesService employeesService)
+        public EmployeeMenu(EmployeesService employeesService, ShiftsService shiftsService, IMapper mapper)
         {
             _employeesService = employeesService;
+            _shiftsService = shiftsService;
+            _mapper = mapper;
         }
 
         private readonly List<string> _menuOptions =
@@ -108,7 +115,7 @@ namespace ShiftsLoggerUI.Menus
         }
 
         private async Task OperateOnEmployee(Employee employee)
-        {
+        {   
             Console.Clear();
             AnsiConsole.MarkupLine($"[bold]Selected Employee:[/] ID({employee.EmployeeId})-{employee.EmployeeName}\t[bold]Phone Number:[/] {employee.EmployeePhone}");
             var selectedOption = AnsiConsole.Prompt(
@@ -130,7 +137,14 @@ namespace ShiftsLoggerUI.Menus
                     AnsiConsole.MarkupLine($"[red]{await _employeesService.Delete(employee.EmployeeId)}[/]");
                     break;
                 case string selection when selection.Contains("3."):
-                    // Show all the shifts affiliated with the selected employee
+                    var empShifts = _mapper.Map<List<ShiftDto>>(await _shiftsService.FindEmpShifts(employee.EmployeeId));
+                    if (empShifts.Count == 0)
+                    {
+                        AnsiConsole.MarkupLine("[red]No Shifts Found![/]");
+                        PressAnyKeyToContinue();
+                        return;
+                    }
+                    TableVisualisationEngine<ShiftDto>.ViewAsTable(empShifts, TableAligntment.Center, new List<string> {"Shift start time", "Shift end time", "Duration (Hrs)" }, "Shifts");
                     break;
                 case string selection when selection.Contains("4."):
                     // return;
