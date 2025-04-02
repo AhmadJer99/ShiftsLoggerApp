@@ -46,6 +46,20 @@ public class ShiftController : ControllerBase
         return Ok(shift);
     }
 
+    [HttpGet("empId/{empId}")]
+    [ProducesResponseType(200, Type = typeof(Shift))]
+    [ProducesResponseType(400)]
+    public async Task<ActionResult<Shift>> FindShiftsAsync(int empId)
+    {
+        var shift = _mapper.Map<List<ShiftDto>>(await _shiftRepository.FindEmpShiftsAsync(empId));
+
+        if (shift == null)
+            return NotFound();
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+        return Ok(shift);
+    }
+
     [HttpPost]
     [ProducesResponseType(200, Type = typeof(Shift))]
     [ProducesResponseType(400)]

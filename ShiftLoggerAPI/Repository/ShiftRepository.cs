@@ -32,6 +32,16 @@ internal class ShiftRepository : IShiftRepository
         return $"Successfully deleted shift with id: {id}";
     }
 
+    public async Task<List<Shift>> FindEmpShiftsAsync(int empId)
+    {
+        var shifts = await _context.Shifts.AsNoTracking().Where(s => s.EmpId == empId).ToListAsync();
+
+        if (shifts == null)
+            return null;
+
+        return shifts;
+    }
+
     public async Task<Shift> FindShiftAsync(int id)
     {
         var shift = await _context.Shifts.AsNoTracking().Where(s => s.ShiftId == id).FirstOrDefaultAsync();

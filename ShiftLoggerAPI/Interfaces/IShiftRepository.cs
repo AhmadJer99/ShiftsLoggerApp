@@ -9,4 +9,5 @@ public interface IShiftRepository
     Task<Shift> FindShiftAsync(int id);
     Task<string> DeleteShiftAsync(int id);
     Task<Shift> UpdateShiftAsync(int id,Shift shift);
+    Task<List<Shift>> FindEmpShiftsAsync(int empId);
 }
